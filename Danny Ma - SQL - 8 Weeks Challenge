@@ -1,0 +1,49 @@
+select customer_id, sum(price) from dannys_diner.sales a1
+join dannys_diner.menu a2
+ON a1.product_id = a2.product_id
+group by customer_id
+order by customer_id;
+
+
+customer_id	sum
+A	76
+B	74
+C	36
+
+
+
+Select customer_id, count(distinct order_date) from dannys_diner.sales a1
+join dannys_diner.menu a2
+ON a1.product_id = a2.product_id
+group by customer_id
+order by customer_id;
+
+
+customer_id	count
+A	4
+B	6
+C	2
+
+
+select distinct customer_id, product_name from
+(
+
+Select customer_id, product_name, dense_rank() over(partition by customer_id order by order_date) as rownum from dannys_diner.sales a1
+join dannys_diner.menu a2
+ON a1.product_id = a2.product_id
+) temp
+where rownum = 1
+
+
+customer_id	product_name
+A	curry
+A	sushi
+B	curry
+C	ramen
+
+
+select product_name, count(a1.product_id) as num from 
+dannys_diner.sales a1
+join dannys_diner.menu a2
+ON a1.product_id = a2.product_id
+group by product_name
